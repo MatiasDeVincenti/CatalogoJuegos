@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { games } from "@/lib/games-data"
+// import { games } from "@/lib/games-data"
 import { GameCard } from "@/components/game-card"
 import { FiltersSidebar } from "@/components/filters-sidebar"
 import { SearchBar } from "@/components/search-bar"
@@ -9,16 +9,28 @@ import { PriceRangeDisplay } from "@/components/price-range-display"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SlidersHorizontal, Gamepad2 } from "lucide-react"
+import { useQuery } from "@tanstack/react-query"
+import { obtenerTodosLosJuegos } from "@/utils"
+import { Game } from "@/lib/games-data"
 
 export default function HomePage() {
+  const consulta = useQuery({ queryKey: ['catalogo'], queryFn: obtenerTodosLosJuegos })
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedGenre, setSelectedGenre] = useState("all")
   const [selectedDeveloper, setSelectedDeveloper] = useState("all")
   const [showOnlyOffers, setShowOnlyOffers] = useState(false)
   const [sortBy, setSortBy] = useState("name-asc")
 
+if (consulta.isLoading) {
+  return (<p> El catálogo se está cargando</p>)
+}
+
+if (consulta.isError) {
+  return (<p> Hubo un error al cargar el catálogo</p>)
+}
+
   const filteredAndSortedGames = useMemo(() => {
-    const filtered = games.filter((game) => {
+    const filtered = consulta.data?.filter((game) => {
       // Filtrar por búsqueda
       const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase())
 
@@ -35,7 +47,7 @@ export default function HomePage() {
     })
 
     // Ordenar
-    filtered.sort((a, b) => {
+    filtered?.sort((a, b) => {
       switch (sortBy) {
         case "name-asc":
           return a.name.localeCompare(b.name)
@@ -134,12 +146,12 @@ export default function HomePage() {
           <div className="flex-1">
             <div className="mb-4 flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                {filteredAndSortedGames.length}{" "}
-                {filteredAndSortedGames.length === 1 ? "videojuego encontrado" : "videojuegos encontrados"}
+                {filteredAndSortedGames?.length}{" "}
+                {filteredAndSortedGames?.length === 1 ? "videojuego encontrado" : "videojuegos encontrados"}
               </p>
             </div>
 
-            {filteredAndSortedGames.length === 0 ? (
+            {filteredAndSortedGames?.length === 0 ? (
               <div className="text-center py-12">
                 <Gamepad2 className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-semibold mb-2">No se encontraron videojuegos</h3>
@@ -155,8 +167,8 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredAndSortedGames.map((game) => (
-                  <GameCard key={game.id} game={game} />
+                {filteredAndSortedGames?.map((game) => (
+                  <GameCard key={game.id} game={game as Game} />
                 ))}
               </div>
             )}

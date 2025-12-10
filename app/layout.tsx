@@ -1,12 +1,14 @@
+"use client"
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
-
+/*
 export const metadata: Metadata = {
   title: "GameVault - Catálogo de Videojuegos",
   description:
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
 }
-
+*/
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fcfcfd" },
@@ -40,7 +42,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   userScalable: false,
 }
-
+const clientePocketBase = new QueryClient()
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -49,7 +51,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`font-sans antialiased`}>
-        {children}
+        <QueryClientProvider client={clientePocketBase}>
+
+          {children}
+        </QueryClientProvider>
         <Analytics />
       </body>
     </html>
