@@ -9,9 +9,9 @@ module.exports = {
     extend: {},
   },
   plugins: [
-    require("tailwindcss-animate")
+    require("tailwindcss-animate"),
   ],
   presets: [
-    require("@shadcn/ui/preset")
-  ]
+    require("@shadcn/ui/preset"),
+  ],
 };
