@@ -1,11 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+  webpack: (config) => {
+    return config;
   },
-  images: {
-    unoptimized: true,
+  experimental: {
+    turbo: {
+      resolveAlias: {},
+      rules: {},
+      loaders: {},
+      // Desactiva totalmente Turbopack
+      // (Next activará Webpack automáticamente)
+      // ***
+      enabled: false
+      // ***
+    },
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
