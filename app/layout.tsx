@@ -1,39 +1,14 @@
-"use client"
-import type React from "react"
-import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
-import "./globals.css"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import "./globals.css";
+import { fontSans, fontMono } from "./fonts";
+import { Analytics } from "@vercel/analytics/next";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
-/*
-export const metadata: Metadata = {
-  title: "GameVault - Catálogo de Videojuegos",
-  description:
-    "Descubre las mejores ofertas en videojuegos. Explora, compara precios y encuentra tu próximo juego favorito.",
-  generator: "v0.app",
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
-  },
-}
-*/
-export const viewport: Viewport = {
+export const metadata = {
+  title: "Catalogo",
+  description: "Catalogo de juegos",
+};
+
+export const viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fcfcfd" },
     { media: "(prefers-color-scheme: dark)", color: "#1a1a2e" },
@@ -41,22 +16,21 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   userScalable: false,
-}
-const clientePocketBase = new QueryClient()
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+};
+
+const queryClient = new QueryClient();
+
+export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body className={`font-sans antialiased`}>
-        <QueryClientProvider client={clientePocketBase}>
-
+      <body
+        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
+      >
+        <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>
         <Analytics />
       </body>
     </html>
-  )
+  );
 }
