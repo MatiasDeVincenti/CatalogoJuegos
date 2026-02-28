@@ -8,10 +8,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [
-    require("tailwindcss-animate"),
-  ],
-  presets: [
-    require("@shadcn/ui/preset"),
-  ],
+  plugins: [require("tailwindcss-animate")],
 };

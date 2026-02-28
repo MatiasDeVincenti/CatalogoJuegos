@@ -1,15 +1,19 @@
 import "./globals.css";
-import { fontSans, fontMono } from "./fonts";
+import type { ReactNode } from "react";
 
 export const metadata = {
   title: "Catalogo",
   description: "Catalogo de juegos"
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
-    <html lang="es">
-      <body className={`${fontSans.variable} ${fontMono.variable} font-sans`}>
+    <html lang="en">
+      <body>
         {children}
       </body>
     </html>
