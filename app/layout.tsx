@@ -1,20 +1,20 @@
+"use client"
 import "./globals.css";
 import type { ReactNode } from "react";
+import {
+  QueryClientProvider,
+  QueryClient,
+} from "@tanstack/react-query";
 
-export const metadata = {
-  title: "Catalogo",
-  description: "Catalogo de juegos"
-};
+const queryClient = new QueryClient();
 
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        {children}
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
       </body>
     </html>
   );

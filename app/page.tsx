@@ -31,60 +31,8 @@ export default function HomePage() {
   if (isError) {
     return <p>Hubo un error al cargar el catálogo</p>
   }
+const filteredAndSortedGames = games
 
-  const filteredAndSortedGames = useMemo(() => {
-    const filtered = games.filter((game) => {
-      const matchesSearch = game.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-
-      const matchesGenre =
-        selectedGenre === "all" || game.genre === selectedGenre
-
-      const matchesDeveloper =
-        selectedDeveloper === "all" || game.developer === selectedDeveloper
-
-      const matchesOffers =
-        !showOnlyOffers ||
-        (game.originalPrice !== undefined &&
-          game.originalPrice > game.price)
-
-      return (
-        matchesSearch &&
-        matchesGenre &&
-        matchesDeveloper &&
-        matchesOffers
-      )
-    })
-
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "name-asc":
-          return a.name.localeCompare(b.name)
-        case "name-desc":
-          return b.name.localeCompare(a.name)
-        case "price-asc":
-          return a.price - b.price
-        case "price-desc":
-          return b.price - a.price
-        case "year-desc":
-          return b.year - a.year
-        case "rating-desc":
-          return (b.rating ?? 0) - (a.rating ?? 0)
-        default:
-          return 0
-      }
-    })
-
-    return sorted
-  }, [
-    games,
-    searchQuery,
-    selectedGenre,
-    selectedDeveloper,
-    showOnlyOffers,
-    sortBy,
-  ])
 
   const clearFilters = () => {
     setSelectedGenre("all")
