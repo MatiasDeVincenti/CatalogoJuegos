@@ -141,7 +141,7 @@ export const games: Game[] = [
   {
     id: "12",
     name: "Stardew Valley",
-    cover: "/stardew-valley-game-cover.png",
+    cover: "/public/stardew.jpg",
     price: 14.99,
     year: 2016,
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
