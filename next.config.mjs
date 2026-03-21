@@ -1,9 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {}, // Add this line
-  webpack: (config) => {
-    return config;
-  }
-};
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.akamai.steamstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "shared.akamai.steamstatic.com",
+      },
+    ],
+  },
+}
 
-export default nextConfig;
+export default nextConfig

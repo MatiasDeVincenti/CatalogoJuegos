@@ -1,91 +1,70 @@
-"use client"
-
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import type { Game } from "@/lib/games-data"
-import { Star, Gamepad2 } from "lucide-react"
 import Image from "next/image"
+import { Card } from "@/components/ui/card"
 
-interface GameCardProps {
-  game: Game
-}
+export function GameCard({ game, steamData }: any) {
+  const name = steamData?.name || game.name || "Juego sin nombre"
 
-export function GameCard({ game }: GameCardProps) {
-  const hasDiscount =
-    typeof game.originalPrice === "number" &&
-    game.originalPrice > game.price
+  const image =
+    steamData?.header_image ||
+    game.cover ||
+    "/placeholder.svg"
 
-  const discountPercent = hasDiscount
-    ? Math.round(
-        ((game.originalPrice! - game.price) / game.originalPrice!) * 100
-      )
-    : 0
+  const priceData = steamData?.price_overview
+
+  const price = priceData
+    ? priceData.final_formatted
+    : game.price
+    ? `$${game.price}`
+    : "Gratis"
+
+  const originalPrice = priceData?.initial_formatted
+
+  const developer =
+    steamData?.developers?.[0] ||
+    game.developer ||
+    "Desconocido"
+
+  const discount = priceData?.discount_percent
 
   return (
-    <Card className="group overflow-hidden transition-all hover:shadow-lg">
-      <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+    <Card className="group overflow-hidden hover:shadow-lg transition">
+      {/* Imagen */}
+      <div className="relative aspect-[3/4] bg-muted">
         <Image
-          src={game.cover || "/placeholder.svg"}
-          alt={game.name}
+          src={image}
+          alt={name}
           fill
+          sizes="(max-width: 768px) 100vw, 25vw"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        {hasDiscount && (
-          <div className="absolute right-2 top-2 z-10">
-            <Badge className="bg-destructive text-destructive-foreground font-bold">
-              -{discountPercent}%
-            </Badge>
+
+        {/* Descuento */}
+        {discount && (
+          <div className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+            -{discount}%
           </div>
         )}
       </div>
 
-      <CardContent className="p-4">
-        <h3 className="font-semibold text-lg leading-tight mb-2 line-clamp-2">
-          {game.name}
-        </h3>
+      {/* Info */}
+      <div className="p-3 space-y-1">
+        <h3 className="font-semibold line-clamp-1">{name}</h3>
 
-        <p className="text-sm text-muted-foreground mb-1">
-          {game.developer}
+        <p className="text-sm text-muted-foreground line-clamp-1">
+          {developer}
         </p>
 
-        <div className="flex items-center gap-2 mb-2">
-          <Badge variant="secondary" className="text-xs">
-            {game.genre}
-          </Badge>
-          <span className="text-xs text-muted-foreground">
-            {game.year}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap mb-2">
-          {game.platforms?.map((platform) => (
-            <Gamepad2
-              key={platform}
-              className="w-4 h-4 text-muted-foreground"
-            />
-          ))}
-        </div>
-
-        {game.rating && (
-          <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-accent text-accent" />
-            <span className="text-sm font-medium">
-              {game.rating.toFixed(1)}
+        {/* Precio */}
+        <div className="flex items-center gap-2">
+          {originalPrice && (
+            <span className="text-xs line-through text-muted-foreground">
+              {originalPrice}
             </span>
-          </div>
-        )}
-      </CardContent>
+          )}
 
-      <CardFooter className="p-4 pt-0 flex items-center gap-2">
-        {hasDiscount && (
-          <span className="text-sm text-muted-foreground line-through">
-            ${game.originalPrice?.toFixed(2)}
-          </span>
-        )}
-        <span className="text-2xl font-bold text-primary">
-          ${game.price.toFixed(2)}
-        </span>
-      </CardFooter>
+          <span className="font-bold">{price}</span>
+        </div>
+      </div>
     </Card>
   )
 }
